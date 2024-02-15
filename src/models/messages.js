@@ -15,7 +15,8 @@ const MessageSchema= new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    reaction:String
+    reaction:String,
+    replyto:Object
 
     
 },{timestamps:true, collection:"messages"})

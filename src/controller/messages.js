@@ -9,15 +9,25 @@ const Messages = require("../models/messages");
 
 module.exports = {
   createMessage: async (req, res) => {
-    const { chatId, senderId, text } = req.body;
-    const message = await Messages.create({ chatId, senderId, text });
-
+    const { chatId, senderId, text, messageId } = req.body;
+    const replyto= await Messages.findOne({_id:messageId})
+    const message = await Messages.create({ chatId, senderId, text, replyto });
     try {
-      const response = await message.save();
-      res.status(200).send({
-        error: false,
-        response,
-      });
+      if(messageId){
+        const response = await message.save();
+        res.status(200).send({
+          error: false,
+          response,
+          replyto
+        });
+      }else{
+        const response = await message.save();
+        res.status(200).send({
+          error: false,
+          response,
+        })
+      }
+    
     } catch (error) {
       console.log(error);
       res.status(500).send(error);
@@ -72,6 +82,27 @@ module.exports = {
     }
   },
 
+//   reply: async (req, res) => {
+//     const {messageId} = req.body
+//     const {reply}=req.body
+//     const val=await Messages.findOne({_id:messageId })
+
+//    try {
+
+//      await Messages.updateOne({ _id:messageId },  {reaction:reaction}, {
+//      runValidators: true});
+
+//      const upMessage = await Messages.findOne({_id:messageId})
+//      res.status(200).send(upMessage);
+
+//    } catch (error) {
+//      console.log(error);
+//      res.status(500).send(error);
+//    }
+//  },
+
+
+
   deleteMessage: async (req, res) => {
     const data = await Messages.deleteOne({ _id: req.body.messageId });
 
@@ -85,4 +116,6 @@ module.exports = {
       });
     }
   },
+
+
 };
