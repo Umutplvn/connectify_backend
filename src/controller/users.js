@@ -27,7 +27,6 @@ module.exports = {
     const data = await User.create(req.body);
     const { email, password, name } = req.body;
     const upName= name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
-  console.log(upName);
 
     if (email && password) {
       const user = await User.findOne({
@@ -43,6 +42,7 @@ module.exports = {
         res.send({
           error: false,
           result: req.body,
+          Token: tokenData, 
           passcode
         });
       }
