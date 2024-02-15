@@ -1,0 +1,69 @@
+"use strict";
+
+/*--------------------------------------*
+Connectify
+/*--------------------------------------*/
+
+require("express-async-errors");
+const Messages = require("../models/messages");
+
+module.exports = {
+  createMessage: async (req, res) => {
+    const { chatId, senderId, text } = req.body;
+    const message = await Messages.create({ chatId, senderId, text });
+
+    try {
+      const response = await message.save();
+      res.status(200).send({
+        error: false,
+        response,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  },
+
+  getMessages: async (req, res) => {
+    const { chatId } = req.params;
+    try {
+      const messages = await Messages.find({ chatId });
+      res.status(200).send(messages);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  },
+
+  favMessage: async (req, res) => {
+     const {messageId} = req.body
+     const val=await Messages.findOne({_id:messageId })
+
+    try {
+      let value=val.fav
+      const messages = await Messages.updateOne({ _id:messageId },  {fav:(!value)}, {
+      runValidators: true});
+
+      const upMessage = await Messages.findOne({_id:messageId})
+      res.status(200).send(upMessage);
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  },
+
+  deleteMessage: async (req, res) => {
+    const data = await Messages.deleteOne({ _id: req.body.messageId });
+
+    if (data.deletedCount >= 1) {
+      res.send({
+        message: "Message successfully deleted",
+      });
+    } else {
+      res.send({
+        message: "There is no recording to be deleted.",
+      });
+    }
+  },
+};
