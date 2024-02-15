@@ -12,6 +12,7 @@ router.route('/').post(Messages.createMessage)
 router.route('/:chatId').get(Messages.getMessages)
 router.route('/delete').delete(Messages.deleteMessage)
 router.route('/fav').post(Messages.favMessage)
+router.route('/reaction').put(Messages.addReaction)
 
 
     

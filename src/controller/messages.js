@@ -53,6 +53,25 @@ module.exports = {
     }
   },
 
+  addReaction: async (req, res) => {
+     const {messageId} = req.body
+     const {reaction}=req.body
+     const val=await Messages.findOne({_id:messageId })
+
+    try {
+
+      await Messages.updateOne({ _id:messageId },  {reaction:reaction}, {
+      runValidators: true});
+
+      const upMessage = await Messages.findOne({_id:messageId})
+      res.status(200).send(upMessage);
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  },
+
   deleteMessage: async (req, res) => {
     const data = await Messages.deleteOne({ _id: req.body.messageId });
 

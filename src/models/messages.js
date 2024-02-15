@@ -14,7 +14,8 @@ const MessageSchema= new mongoose.Schema({
     fav:{
         type:Boolean,
         default:false
-    }
+    },
+    reaction:String
 
     
 },{timestamps:true, collection:"messages"})
