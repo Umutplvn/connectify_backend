@@ -18,7 +18,7 @@ const sendVerificationEmail = (email, passcode, name) => {
     <p style="margin-bottom: 15px; font-size: 16px;">Hello ${name},</p>
     <p style="margin-bottom: 15px; font-size: 16px;">Thank you for registering with Connectify! As the final step to complete your registration process, please find your passcode below:</p>
     <p style="background-color: #f4f4f4; padding: 10px">
-        <strong style="color: red; font-weight: bold; font-size: 16px;">Passcode: ${passcode}</strong>
+        <strong style="color: #3C9387; font-weight: bold; font-size: 16px;">Passcode: ${passcode}</strong>
     </p>
     <p style="font-size: 16px;">If you have any questions or need further assistance, feel free to reach out to us. We're here to help.</p>
     <p style="margin-top: 20px; font-size: 14px; color: #666; text-align: center;">Best regards,<br>Connectify Team</p>
