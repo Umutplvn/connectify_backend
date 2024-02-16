@@ -38,6 +38,10 @@ const UserSchema= new mongoose.Schema({
         required:true
     },
     status:String,
+    verified:{
+        type:Boolean,
+        default:false
+    }
  
 
 },{timestamps:true, collection:"user"})

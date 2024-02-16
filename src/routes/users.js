@@ -17,7 +17,7 @@ router.route('/register')
 router.route('/changepassword')
     .put(User.updatePassword)
 
-router.route('/:userId')
+router.route('/users/:userId')
     .get(User.read)
     .put(User.update)
     .delete(User.delete)
