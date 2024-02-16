@@ -41,7 +41,7 @@ module.exports = {
         
         res.send({
           error: false,
-          result: req.body,
+          result: user,
           Token: tokenData, 
           passcode
         });
