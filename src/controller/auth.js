@@ -7,10 +7,10 @@ const passwordEncrypt = require("../helpers/passwordEncrypt.js");
 
 module.exports = {
   login: async (req, res) => {
-    const { password, name } = req.body;
-    if (password && name) {
+    const { password, email } = req.body;
+    if (password && email) {
      
-      const user = await User.findOne({ name: name, password: password });
+      const user = await User.findOne({ email: email, password: password });
 
       if (user) {
         const tokenData ="Token "+passwordEncrypt(user._id+`${new Date()}`);
