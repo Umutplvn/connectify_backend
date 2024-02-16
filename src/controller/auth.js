@@ -11,22 +11,36 @@ module.exports = {
     if (password && email) {
      
       const user = await User.findOne({ email: email, password: password });
-
-      if (user) {
-        const tokenData ="Token "+passwordEncrypt(user._id+`${new Date()}`);
-        
-        await Token.create({ userId: user._id, token: tokenData });
-
-        res.status(200).send({
-            error: false,
-            result:user,
-            Token: tokenData,   
-        });
-      } else {
+      const isVerified=user.verified
+      
+        if (user) {
+          const tokenData ="Token "+passwordEncrypt(user._id+`${new Date()}`);
+          if(isVerified){
+            await Token.create({ userId: user._id, token: tokenData });
+  
+            res.status(200).send({
+                error: false,
+                result:user,
+                Token: tokenData,   
+            });
+          }else{
+            res.send({
+              error:true,
+              message:"You need to verify your account first."
+            })
+          }
+       
+        }
+      
+    else {
         res.errorStatusCode = 401;
         throw new Error("Login parameters are not true.");
       }
-    } else {
+
+
+    } 
+    
+    else {
       res.errorStatusCode = 400;
       throw new Error("Email and Password are required.");
     }
