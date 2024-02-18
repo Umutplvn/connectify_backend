@@ -26,7 +26,7 @@ module.exports = {
           }else{
             res.send({
               error:true,
-              user,
+              result:user,
               message:"You need to verify your account first."
             })
           }
