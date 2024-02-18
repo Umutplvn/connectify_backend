@@ -60,9 +60,10 @@ module.exports = {
 
   update: async (req, res) => {
     const data = await User.updateOne({ _id: req.params.userId }, req.body );
-
+    const tokenData=await Token.findOne({userId:req.params.userId })
     res.status(202).send({
       error: false,
+      Token:tokenData,
       body: req.body,
       result: await User.findOne({ _id: req.params.userId }),
     });
