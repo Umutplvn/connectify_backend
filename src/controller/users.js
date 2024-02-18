@@ -63,7 +63,7 @@ module.exports = {
     const tokenData=await Token.findOne({userId:req.params.userId })
     res.status(202).send({
       error: false,
-      Token:tokenData,
+      Token:tokenData.token,
       body: req.body,
       result: await User.findOne({ _id: req.params.userId }),
     });
