@@ -29,7 +29,7 @@ module.exports = {
 
     const user = await User.findOne({ username });
     if (user) {
-        res.status(400).send({ error: true, message: "User with the same email or username already exists." });
+        res.status(400).send({ error: true, message: "Username has already been taken." });
         return;
     }
 
