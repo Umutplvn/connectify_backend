@@ -25,13 +25,14 @@ module.exports = {
   create: async (req, res) => {
     let passcode= Math.floor(Math.random() * 10000) + 2000;
     const data = await User.create(req.body);
-    const { email, password, name } = req.body;
+    const { email, password, name, username } = req.body;
     const upName= name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
 
-    if (email && password) {
+    if (email && username) {
       const user = await User.findOne({
         email: email,
-        password: password,
+        username: username,
+        password:password
       });
       if (user) {
         const tokenData =
