@@ -11,6 +11,9 @@ const User = require('../controller/users')
 router.route('/users')
     .get(User.list)
 
+router.route('/users/filter')
+    .get(User.filterUser)
+
 router.route('/register')
     .post(User.create)
 

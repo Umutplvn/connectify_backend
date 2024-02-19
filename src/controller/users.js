@@ -23,32 +23,29 @@ module.exports = {
 
 
   create: async (req, res) => {
-    let passcode= Math.floor(Math.random() * 10000) + 2000;
-    const data = await User.create(req.body);
+    let passcode = Math.floor(Math.random() * 10000) + 2000;
     const { email, password, name, username } = req.body;
-    const upName= name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+    const upName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
-    if (email && username) {
-      const user = await User.findOne({
-        email: email,
-        username: username,
-        password:password
-      });
-      if (user) {
-        const tokenData =
-        "Token " + passwordEncrypt(user._id + `${new Date()}`);
-        await Token.create({ userId: user._id, token: tokenData });
-        sendVerificationEmail(email, passcode, upName)
-        
-        res.send({
-          error: false,
-          result: user,
-          Token: tokenData, 
-          passcode
-        });
-      }
+    const user = await User.findOne({ username });
+    if (user) {
+        res.status(400).send({ error: true, message: "User with the same email or username already exists." });
+        return;
     }
-  },
+
+    const newUser = await User.create({ email, username, password, name });
+    const tokenData = "Token " + passwordEncrypt(newUser._id + `${new Date()}`);
+    await Token.create({ userId: newUser._id, token: tokenData });
+    sendVerificationEmail(email, passcode, upName);
+    
+    res.status(201).send({
+        error: false,
+        result: newUser,
+        Token: tokenData, 
+        passcode
+    });
+},
+
 
   read: async (req, res) => {
     const data = await User.findOne({ _id: req.params.userId });
@@ -59,8 +56,20 @@ module.exports = {
     });
   },
 
+  filterUser: async (req, res) => {
+    const {username} = req.body;
+    const regex = new RegExp(username, 'i')
+    const data = await User.find({ username: { $regex: username, $options: 'i' } });
+
+    res.status(200).send({
+      error: false,
+      result: data,
+    });
+  },
+
   update: async (req, res) => {
-    const data = await User.updateOne({ _id: req.params.userId }, req.body );
+    const data = await User.updateOne({ _id: req.params.userId }, req.body, {runValidators: true,
+    });
     const tokenData=await Token.findOne({userId:req.params.userId })
     res.status(202).send({
       error: false,
