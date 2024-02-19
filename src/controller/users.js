@@ -28,8 +28,13 @@ module.exports = {
     const upName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
     const user = await User.findOne({ username });
+    const userEmail = await User.findOne({ email });
+
     if (user) {
         res.status(400).send({ error: true, message: "Username has already been taken." });
+        return;
+    }else if(userEmail){
+      res.status(400).send({ error: true, message: "The email address is already in use." });
         return;
     }
 
