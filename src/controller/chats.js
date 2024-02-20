@@ -16,17 +16,16 @@ module.exports = {
 
     try {
         const chat = await Chats.findOne({members:{$all:[userId, secondId]}}) // check if chat is already exist or not
-        if(chat) return res.status(200).send(chat) // if chat is exist, return it
-        const newChat=await Chats.create({ members:[userId, secondId]}) // if not exist create new one
+        const toWho=await Users.findOne({_id:secondId})
+        if(chat) return res.status(200).send({
+            result:chat
+        }) 
+        // if chat is exist, return it
+        const newChat=await Chats.create({ members:[userId, secondId], toWho:toWho }) // if not exist create new one
         const response=await newChat.save() // The save() method uses either the insert or the update command
-        const sender=await Users.findOne({_id:secondId})
 
         res.status(200).json({
-            response:response,
-            result:{
-                chat:chat,
-                sender:sender
-            }
+            result:response,         
         })
 
 
@@ -41,11 +40,10 @@ module.exports = {
     try {
         const chats=await Chats.find({members:{$in: [userId]}})
         const senderId=await chats[0].members[1]
-        const sender=await Users.findOne({_id:senderId})
         res.status(200).send({
            result:{ 
             chats:chats,
-            sender:sender}
+            }
         })
     } catch (error) {
         console.log(error);
@@ -56,13 +54,12 @@ module.exports = {
   findChat:async(req, res)=>{
     const userId=req.user
     const {secondId}=req.params
-    const sender=await Users.findOne({_id:secondId})
     try {
         const chat=await Chats.findOne({members:{$all: [userId, secondId]}})
         res.status(200).send({
             result:{
                 chat:chat,
-                sender:sender
+               
             }
         })
 
