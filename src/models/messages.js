@@ -9,7 +9,7 @@ const mongoose=require('mongoose')
 const MessageSchema= new mongoose.Schema({
 
     chatId:String,
-    senderId:String,
+    sender:Object,
     text:String,
     fav:{
         type:Boolean,

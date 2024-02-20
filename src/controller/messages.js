@@ -6,12 +6,14 @@ Connectify
 
 require("express-async-errors");
 const Messages = require("../models/messages");
+const Users = require("../models/users");
 
 module.exports = {
   createMessage: async (req, res) => {
     const { chatId, senderId, text, messageId } = req.body;
+    const sender = await Users.findOne({_id:senderId})
     const replyto= await Messages.findOne({_id:messageId})
-    const message = await Messages.create({ chatId, senderId, text, replyto });
+    const message = await Messages.create({ chatId, sender:sender, text, replyto });
     try {
       if(messageId){
         const response = await message.save();
