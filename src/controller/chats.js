@@ -37,13 +37,11 @@ module.exports = {
 
   findAllChats:async(req, res)=>{
     const userId=req.user
+
     try {
-        const chats=await Chats.find({members:{$in: [userId]}})
-        const senderId=await chats[0].members[1]
-        res.status(200).send({
-           result:{ 
-            chats:chats,
-            }
+        const response=await Chats.find({members:{$in: [userId]}})
+        res.status(200).send({      
+           result:response
         })
     } catch (error) {
         console.log(error);
