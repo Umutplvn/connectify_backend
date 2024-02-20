@@ -40,7 +40,7 @@ app.all('/', (req, res)=>{
 
 app.use('/auth', require('./src/routes/users'))
 app.use('/auth', require('./src/routes/auth'))
-app.use('/chat', require('./src/routes/chats'))
+app.use('/chats', require('./src/routes/chats'))
 app.use('/message', require('./src/routes/messages'))
 
 /*--------------------------------------*/
