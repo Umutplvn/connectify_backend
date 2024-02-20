@@ -5,8 +5,8 @@ Connectify
 /*--------------------------------------*/
 
 require("express-async-errors");
-const passwordEncrypt = require("../helpers/passwordEncrypt");
 const Chats = require("../models/chats");
+const Users = require("../models/users");
 
 module.exports = {
 
@@ -19,7 +19,14 @@ module.exports = {
         if(chat) return res.status(200).send(chat) // if chat is exist, return it
         const newChat=await Chats.create({ members:[userId, secondId]}) // if not exist create new one
         const response=await newChat.save() // The save() method uses either the insert or the update command
-        res.status(200).json(response)
+        const sender=await Users.findOne({_id:secondId})
+
+        res.status(200).json({
+            response:response,
+            chat:chat,
+            sender:sender
+        })
+
 
     } catch (error) {
         console.log(error);
@@ -31,8 +38,12 @@ module.exports = {
     const userId=req.user
     try {
         const chats=await Chats.find({members:{$in: [userId]}})
-        res.status(200).send(chats)
-
+        const senderId=await chats[0].members[1]
+        const sender=await Users.findOne({_id:senderId})
+        res.status(200).send({
+            chats:chats,
+            sender:sender
+        })
     } catch (error) {
         console.log(error);
         res.status(500).send(error)
