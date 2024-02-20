@@ -23,8 +23,10 @@ module.exports = {
 
         res.status(200).json({
             response:response,
-            chat:chat,
-            sender:sender
+            result:{
+                chat:chat,
+                sender:sender
+            }
         })
 
 
@@ -41,8 +43,9 @@ module.exports = {
         const senderId=await chats[0].members[1]
         const sender=await Users.findOne({_id:senderId})
         res.status(200).send({
+           result:{ 
             chats:chats,
-            sender:sender
+            sender:sender}
         })
     } catch (error) {
         console.log(error);
@@ -53,10 +56,15 @@ module.exports = {
   findChat:async(req, res)=>{
     const userId=req.user
     const {secondId}=req.params
-
+    const sender=await Users.findOne({_id:secondId})
     try {
         const chat=await Chats.findOne({members:{$all: [userId, secondId]}})
-        res.status(200).send(chat)
+        res.status(200).send({
+            result:{
+                chat:chat,
+                sender:sender
+            }
+        })
 
     } catch (error) {
         console.log(error);
