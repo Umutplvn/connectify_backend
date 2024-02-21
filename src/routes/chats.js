@@ -11,7 +11,7 @@ const Chats = require('../controller/chats')
 router.route('/:secondId').post(Chats.createChat)
 router.route('/findall').get(Chats.findAllChats)
 router.route('/find/:secondId').get(Chats.findChat)
-router.route('/deletechat').delete(Chats.deleteChat)
+router.route('/deletechat/:chatId').delete(Chats.deleteChat)
 
     
 

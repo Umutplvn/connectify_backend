@@ -70,7 +70,8 @@ module.exports = {
 
   deleteChat:async(req, res)=>{
 
-    const data=await Chats.deleteOne({ _id: req.body.chatId})
+    const {chatId}=req.params
+    const data=await Chats.deleteOne({ _id: chatId})
 
     if((data.deletedCount >= 1)){
 
