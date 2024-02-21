@@ -8,6 +8,8 @@ require("express-async-errors");
 const passwordEncrypt = require("../helpers/passwordEncrypt");
 const User = require("../models/users");
 const Token = require("../models/token");
+const Chats = require("../models/chats");
+const { ObjectId } = require('mongoose').Types;
 const sendVerificationEmail=require('./emailVerification')
 
 module.exports = {
@@ -73,14 +75,26 @@ module.exports = {
   },
 
   update: async (req, res) => {
-    const data = await User.updateOne({ _id: req.params.userId }, req.body, {runValidators: true,
-    });
-    const tokenData=await Token.findOne({userId:req.params.userId })
+    const userId = req.user
+
+    const updateData = req.body; // Güncellenecek veri
+    const updatedUser = await User.findOneAndUpdate({ _id: userId}, updateData, { new: true, runValidators: true });
+    const tokenData=await Token.findOne({userId:userId })
+    
+    // const chats = await Chats.find({ "sender._id": userId });
+    // for (const chat of chats) {
+    //   chat.sender = updatedUser; // Sender alanını güncelle
+    //   await chat.save(); }
+
+      const receiver = await Chats.find({ "toWho._id": userId });
+      for (const chat of receiver) {
+        chat.toWho = updatedUser; // Sender alanını güncelle
+        await chat.save(); }
+
     res.status(202).send({
       error: false,
       Token:tokenData.token,
-      body: req.body,
-      result: await User.findOne({ _id: req.params.userId }),
+      result: updatedUser,
     });
   },
 
