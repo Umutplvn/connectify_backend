@@ -10,7 +10,7 @@ const User = require("../models/users");
 const Token = require("../models/token");
 const Chats = require("../models/chats");
 const { ObjectId } = require('mongoose').Types;
-const sendVerificationEmail=require('./emailVerification')
+const sendVerificationEmail=require('./emailVerification');
 
 module.exports = {
   list: async (req, res) => {
@@ -77,15 +77,10 @@ module.exports = {
   update: async (req, res) => {
     const userId = req.user
 
-    const updateData = req.body; // Güncellenecek veri
+    const updateData = req.body; 
     const updatedUser = await User.findOneAndUpdate({ _id: userId}, updateData, { new: true, runValidators: true });
     const tokenData=await Token.findOne({userId:userId })
-    
-    // const chats = await Chats.find({ "sender._id": userId });
-    // for (const chat of chats) {
-    //   chat.sender = updatedUser; // Sender alanını güncelle
-    //   await chat.save(); }
-
+  
       const receiver = await Chats.find({ "toWho._id": userId });
       for (const chat of receiver) {
         chat.toWho = updatedUser; // Sender alanını güncelle
@@ -97,7 +92,54 @@ module.exports = {
       result: updatedUser,
     });
   },
+  addcontact: async (req, res) => {
+    const { contactId } = req.body;
+    const userId = req.user;
+  
+    const user = await User.findOne({ _id: contactId }); 
+    const existingUser = await User.findOne({ _id: userId });
+    let contactExists = false;
 
+    existingUser.contacts.forEach(contact => {
+      if (contact._id.toString() === contactId) {
+        contactExists = true;
+        return;
+      }
+    });
+  
+    if (!contactExists) {
+      await User.updateOne({ _id: userId }, { $push: { contacts: user } });
+    }
+      const updatedUser = await User.findOne({ _id: userId });
+  
+    res.status(202).send({
+      error: false,
+      contacts: updatedUser.contacts,
+    });
+  },
+  
+
+  removecontact: async (req, res) => {
+    const { contactId } = req.body;
+    const userId = req.user;
+  
+    const user = await User.findOne({ _id: contactId });
+    await User.updateOne({ _id: req.user }, { $pull: { contacts: user } });
+    const updatedUser = await User.findOne({ _id: userId });
+  
+    if (!updatedUser.contacts.some(contact => contact._id.toString() === contactId)) {
+      return res.status(404).send({
+        error: true,
+        message: 'Contact is not in the contacts list.'
+      });
+    }
+  
+    res.status(202).send({
+      error: false,
+      contacts: updatedUser.contacts,
+    });
+  },
+  
 
   delete: async (req, res) => {
     const data = await User.deleteOne({ _id: req.params.userId });

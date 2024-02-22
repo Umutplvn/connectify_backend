@@ -49,7 +49,9 @@ const UserSchema= new mongoose.Schema({
     verified:{
         type:Boolean,
         default:false
-    }
+    },
+
+    contacts:[{type:Object}]
  
 
 },{timestamps:true, collection:"user"})
