@@ -145,20 +145,10 @@ module.exports = {
     await User.updateOne({ _id: req.user }, { $pull: { contacts: user } });
     const updatedUser = await User.findOne({ _id: userId });
 
-    if (
-      !updatedUser.contacts.some(
-        (contact) => contact._id.toString() === contactId
-      )
-    ) {
-      return res.status(404).send({
-        error: true,
-        message: "Contact is not in the contacts list.",
-      });
-    }
-
     res.status(202).send({
       error: false,
       contacts: updatedUser.contacts,
+      message:"Contact successfully removed from your contacts list."
     });
   },
 
