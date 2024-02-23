@@ -111,8 +111,6 @@ module.exports = {
     const userId = req.user;
     const user = await User.findOne({ _id: userId });
 
-
-
     res.status(202).send({
       error: false,
       contacts: user.contacts,
