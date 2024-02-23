@@ -16,6 +16,7 @@ router.route("/register").post(User.create);
 router.route("/changepassword").put(User.updatePassword);
 
 router.route("/users").put(User.update);
+router.route("/users/getmycontacts").get(User.getMyContacts);
 router.route("/users/addcontact").post(User.addcontact);
 router.route("/users/removecontact").post(User.removecontact);
 
