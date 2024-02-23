@@ -9,7 +9,6 @@ const passwordEncrypt = require("../helpers/passwordEncrypt");
 const User = require("../models/users");
 const Token = require("../models/token");
 const Chats = require("../models/chats");
-const { ObjectId } = require("mongoose").Types;
 const sendVerificationEmail = require("./emailVerification");
 
 module.exports = {
@@ -95,6 +94,12 @@ module.exports = {
       await chat.save();
     }
 
+    const contacts = await User.find({ "contacts._id": userId });
+    for (const contact of contacts) {
+      contact.contacts = updatedUser; 
+      await contact.save();
+    }
+
     res.status(202).send({
       error: false,
       Token: tokenData.token,
@@ -105,6 +110,8 @@ module.exports = {
   getMyContacts: async (req, res) => {
     const userId = req.user;
     const user = await User.findOne({ _id: userId });
+
+
 
     res.status(202).send({
       error: false,
