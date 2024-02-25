@@ -7,23 +7,39 @@ Connectify
 require("express-async-errors");
 const Stories = require("../models/stories");
 const Users = require("../models/users");
+const multer = require('multer');
 
 module.exports = {
+  
   createStory: async (req, res) => {
-    const { content } = req.body;
     const userId = req.user;
+    const { content } = req.body;
 
-    const story = await Stories.create({ userId, content });
     try {
-      res.status(200).send({
-        error: false,
-        response: story,
-      });
+      
+        const storage = multer.memoryStorage();
+        const upload = multer({ storage: storage }).single('image');
+
+        upload(req, res, async (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(400).send('Error uploading file');
+            }
+
+            const image = req.file;
+
+            const story = await Stories.create({ userId, content, image });
+
+            res.status(200).send({
+                error: false,
+                response: story,
+            });
+        });
     } catch (error) {
-      console.log(error);
-      res.status(500).send(error);
+        console.error(error);
+        res.status(500).send(error);
     }
-  },
+},
 
   deleteStory: async (req, res) => {
     const userId=req.user

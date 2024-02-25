@@ -29,10 +29,11 @@ module.exports = {
     const userId=req.user
 
     const data = await Notes.deleteOne({ userId: userId });
-   
+    
     if (data.deletedCount >= 1) {
       res.send({
         message: "Successfully deleted",
+        
       });
     } else {
       res.send({

@@ -14,7 +14,7 @@ const StoriesSchema= new mongoose.Schema({
     required:true
 },
    content:{
-       type:String,
+       type:Buffer,
        required:true,
 },
    expiresAt:{
