@@ -49,7 +49,7 @@ module.exports = {
       const contactNotes = await Notes.find({ userId: { $in: contacts } }).populate("userId");
       const myNote = await Notes.find({ userId: userId }); 
 
-      res.status(200).send({ result: contactNotes, myNote:myNote });
+      res.status(200).send({ result: [...contactNotes, ...myNote ]});
     } catch (error) {
       console.log(error);
       res.status(500).send(error);
