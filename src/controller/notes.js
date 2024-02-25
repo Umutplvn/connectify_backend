@@ -47,8 +47,9 @@ module.exports = {
       const user = await Users.findOne({ _id: userId });
       const contacts = user.contacts.map((contact) => contact?._id);
       const contactNotes = await Notes.find({ userId: { $in: contacts } });
+      const myNote = await Notes.find({ userId: userId }); 
 
-      res.status(200).send({ result: contactNotes });
+      res.status(200).send({ result: contactNotes, myNote:myNote });
     } catch (error) {
       console.log(error);
       res.status(500).send(error);

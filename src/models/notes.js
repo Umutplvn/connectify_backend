@@ -19,7 +19,7 @@ const NotesSchema= new mongoose.Schema({
 },
    expiresAt:{
     type:Date,
-    default:()=> new Date(+new Date()+24 * 60 * 60 * 1000) 
+    default:()=> new Date(+new Date()+24*60*60*1000) 
    }
     
 },{timestamps:true, collection:"notes"})
