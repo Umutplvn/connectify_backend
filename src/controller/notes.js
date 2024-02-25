@@ -46,7 +46,7 @@ module.exports = {
     try {
       const user = await Users.findOne({ _id: userId });
       const contacts = user.contacts.map((contact) => contact?._id);
-      const contactNotes = await Notes.find({ userId: { $in: contacts } });
+      const contactNotes = await Notes.find({ userId: { $in: contacts } }).populate("userId");
       const myNote = await Notes.find({ userId: userId }); 
 
       res.status(200).send({ result: contactNotes, myNote:myNote });
