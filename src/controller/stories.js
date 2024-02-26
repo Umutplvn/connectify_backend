@@ -19,7 +19,7 @@ module.exports = {
       const newImage=await Stories.create({userId, content})
       newImage.save()
       const stories= await Stories.find()
-      
+
       res.status(200).send({message:"Successfully added.", response:stories} )    
 
     } catch (error) {
@@ -48,9 +48,9 @@ module.exports = {
     try {
       const user = await Users.findOne({ _id: userId });
       const contacts = user.contacts.map((contact) => contact?._id);
-      const contactStories = await Stories.find({ userId: { $in: contacts } });
+      const stories = await Stories.find({ userId: { $in: contacts } });
 
-      res.status(200).send({ result: contactStories });
+      res.status(200).send({ response: stories });
     } catch (error) {
       console.log(error);
       res.status(500).send(error);
