@@ -16,27 +16,13 @@ module.exports = {
     const { content } = req.body;
 
     try {
+      const newImage=await Stories.create({userId, content})
+      newImage.save()
+      const stories= await Stories.find()
       
-        const storage = multer.memoryStorage();
-        const upload = multer({ storage: storage }).single('image');
+      res.status(200).send({message:"Successfully added.", response:stories} )    
 
-        upload(req, res, async (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(400).send('Error uploading file');
-            }
-
-            const image = req.file;
-
-            const story = await Stories.create({ userId, content, image });
-
-            res.status(200).send({
-                error: false,
-                response: story,
-            });
-        });
     } catch (error) {
-        console.error(error);
         res.status(500).send(error);
     }
 },
