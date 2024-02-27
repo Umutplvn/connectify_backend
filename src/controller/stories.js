@@ -45,12 +45,15 @@ module.exports = {
 
   getStories: async (req, res) => {
     const userId = req.user;
+  
     try {
       const user = await Users.findOne({ _id: userId });
       const contacts = user.contacts.map((contact) => contact?._id);
       const stories = await Stories.find({ userId: { $in: contacts } });
+      
+      const myStory=await Stories.findOne({ userId: { $in: userId}})
 
-      res.status(200).send({ response: stories });
+      res.status(200).send({ response: stories, myStory:myStory });
     } catch (error) {
       console.log(error);
       res.status(500).send(error);
