@@ -48,10 +48,10 @@ module.exports = {
   
     try {
       const user = await Users.findOne({ _id: userId });
-      const contacts = user.contacts.map((contact) => contact?._id);
-      const stories = await Stories.find({ userId: { $in: contacts } });
-      
+      const contacts = user?.contacts?.map((contact) => contact?._id);
+      const stories = await Stories.find({ userId: { $in: contacts } }).populate("userId");
       const myStory=await Stories.findOne({ userId: { $in: userId}})
+
 
       res.status(200).send({ response: stories, myStory:myStory });
     } catch (error) {

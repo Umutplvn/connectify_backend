@@ -130,6 +130,7 @@ module.exports = {
         return;
       }
     });
+  
 
     if (!contactExists) {
       await User.updateOne({ _id: userId }, { $push: { contacts: user } });
@@ -147,7 +148,7 @@ module.exports = {
     const userId = req.user;
 
     const user = await User.findOne({ _id: contactId });
-    await User.updateOne({ _id: req.user }, { $pull: { contacts: user } });
+    await User.updateOne({ _id: userId }, { $pull: { contacts: user } });
     const updatedUser = await User.findOne({ _id: userId });
 
     res.status(202).send({
@@ -156,6 +157,7 @@ module.exports = {
       message:"Contact successfully removed from your contacts list."
     });
   },
+
 
   delete: async (req, res) => {
     const data = await User.deleteOne({ _id: req.params.userId });
