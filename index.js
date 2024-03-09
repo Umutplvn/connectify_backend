@@ -40,7 +40,6 @@ cron.schedule('* * * * *', async() => {
     try {
         await notes.deleteMany({expiresAt:{$lte:new Date()}})
         await stories.deleteMany({expiresAt:{$lte:new Date()}})
-        console.log("delete");
     } catch (error) {
         console.log(error);
     }

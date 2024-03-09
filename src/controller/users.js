@@ -88,12 +88,6 @@ module.exports = {
     );
     const tokenData = await Token.findOne({ userId: userId });
 
-    const receiver = await Chats.find({ "toWho._id": userId });
-    for (const chat of receiver) {
-      chat.toWho = updatedUser; // Sender alanını güncelle
-      await chat.save();
-    }
-
     const contacts = await User.find({ "contacts._id": userId });
     for (const contact of contacts) {
       contact.contacts = updatedUser; 
