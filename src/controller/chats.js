@@ -53,7 +53,7 @@ module.exports = {
     const userId=req.user
     const {secondId}=req.params
     try {
-        const chat=await Chats.findOne({members:{$all: [userId, secondId]}})
+        const chat=await Chats.findOne({members:{$in: [userId, secondId]}})
         res.status(200).send({
             result:{
                 chat:chat,
