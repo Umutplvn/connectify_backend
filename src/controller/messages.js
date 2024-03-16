@@ -40,9 +40,9 @@ module.exports = {
   },
 
   getMessages: async (req, res) => {
-    const { chatId } = req.params;
+    const { chatId } = req.body;
     try {
-      const messages = await Messages.find({ chatId });
+      const messages = await Messages.find({ chatId:chatId });
       res.status(200).send(messages);
     } catch (error) {
       console.log(error);

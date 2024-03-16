@@ -124,10 +124,11 @@ module.exports = {
         return;
       }
     });
-  
 
     if (!contactExists) {
-      await User.updateOne({ _id: userId }, { $push: { contacts: user } });
+      const { _id, image, email, username, name } = user; 
+      await User.updateOne({ _id: userId }, { $push: { contacts: {_id, image, email, username, name } } });
+
     }
     const updatedUser = await User.findOne({ _id: userId });
 
@@ -142,7 +143,10 @@ module.exports = {
     const userId = req.user;
 
     const user = await User.findOne({ _id: contactId });
-    await User.updateOne({ _id: userId }, { $pull: { contacts: user } });
+
+    const { _id, image, email, username, name } = user; 
+
+    await User.updateOne({ _id: userId }, { $pull: { contacts: {_id, image, email, username, name }} });
     const updatedUser = await User.findOne({ _id: userId });
 
     res.status(202).send({
