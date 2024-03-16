@@ -11,7 +11,9 @@ const Chats = require("../models/chats");
 
 module.exports = {
   createMessage: async (req, res) => {
-    const { chatId, senderId, text, messageId } = req.body;
+    const { chatId, text, messageId } = req.body;
+    const senderId=req.user
+    
     const sender = await Users.findOne({_id:senderId})
     const{_id, email, username, name}=sender
     const replyto= await Messages.findOne({_id:messageId})

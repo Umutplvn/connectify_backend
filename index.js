@@ -52,7 +52,7 @@ cron.schedule('* * * * *', async() => {
 app.use('/auth', require('./src/routes/users'))
 app.use('/auth', require('./src/routes/auth'))
 app.use('/chats', require('./src/routes/chats'))
-app.use('/message', require('./src/routes/messages'))
+app.use('/messages', require('./src/routes/messages'))
 app.use('/app', require('./src/routes/notes'))
 app.use('/app', require('./src/routes/stories'))
 
