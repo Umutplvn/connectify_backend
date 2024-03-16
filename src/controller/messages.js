@@ -13,8 +13,9 @@ module.exports = {
   createMessage: async (req, res) => {
     const { chatId, senderId, text, messageId } = req.body;
     const sender = await Users.findOne({_id:senderId})
+    const{_id, email, username, name}=sender
     const replyto= await Messages.findOne({_id:messageId})
-    const message = await Messages.create({ chatId, sender:sender, text, replyto });
+    const message = await Messages.create({ chatId, sender:{_id, email, username, name}, text, replyto });
     await Chats.updateOne({_id:chatId}, {show:true}, {runValidators: true})
 
     try {
@@ -86,27 +87,6 @@ module.exports = {
       res.status(500).send(error);
     }
   },
-
-//   reply: async (req, res) => {
-//     const {messageId} = req.body
-//     const {reply}=req.body
-//     const val=await Messages.findOne({_id:messageId })
-
-//    try {
-
-//      await Messages.updateOne({ _id:messageId },  {reaction:reaction}, {
-//      runValidators: true});
-
-//      const upMessage = await Messages.findOne({_id:messageId})
-//      res.status(200).send(upMessage);
-
-//    } catch (error) {
-//      console.log(error);
-//      res.status(500).send(error);
-//    }
-//  },
-
-
 
   deleteMessage: async (req, res) => {
     const data = await Messages.deleteOne({ _id: req.body.messageId });
