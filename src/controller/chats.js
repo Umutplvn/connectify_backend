@@ -15,7 +15,7 @@ module.exports = {
         const { secondId } = req.params
         try {
             const user = await Users.findOne({ _id: secondId }) // await kullanarak kullanıcıyı bulun
-            const{name, image}=user
+            const{name, image, _id}=user
             const chat = await Chats.findOne({ members: { $all: [userId, secondId] } })
     
             if (chat) {
@@ -23,7 +23,7 @@ module.exports = {
                     result: chat
                 }) 
             }
-            const newChat = await Chats.create({ members: [userId, secondId], user: {name, image} }) // Yeni sohbeti oluşturun ve 'second' alanını 'user' olarak ayarlayın
+            const newChat = await Chats.create({ members: [userId, secondId], user: {name, image, _id} }) // Yeni sohbeti oluşturun ve 'second' alanını 'user' olarak ayarlayın
             const response = await newChat.save() 
     
             res.status(200).json({
