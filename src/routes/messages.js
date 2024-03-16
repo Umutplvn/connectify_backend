@@ -9,7 +9,7 @@ const Messages = require('../controller/messages')
 
 
 router.route('/').post(Messages.createMessage)
-router.route('/find').get(Messages.getMessages)
+router.route('/find/:chatId').get(Messages.getMessages)
 router.route('/delete').delete(Messages.deleteMessage)
 router.route('/fav').post(Messages.favMessage)
 router.route('/reaction').put(Messages.addReaction)

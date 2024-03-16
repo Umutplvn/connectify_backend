@@ -41,7 +41,7 @@ module.exports = {
   },
 
   getMessages: async (req, res) => {
-    const { chatId } = req.body;
+    const { chatId } = req.params;
     try {
       const messages = await Messages.find({ chatId:chatId });
       res.status(200).send(messages);
