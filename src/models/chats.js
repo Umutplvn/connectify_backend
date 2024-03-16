@@ -12,7 +12,8 @@ const ChatSchema= new mongoose.Schema({
     show:{
         type:Boolean,
         default:false
-    }
+    },
+    user:{type:Object}
         
 },{timestamps:true, collection:"chats"})
 

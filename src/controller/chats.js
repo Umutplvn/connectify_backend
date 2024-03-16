@@ -10,31 +10,31 @@ const Users = require("../models/users");
 
 module.exports = {
 
-  createChat:async(req,res)=>{
-    const userId=req.user.toString()
-    const {secondId}=req.params
-
-    try {
-        const chat = await Chats.findOne({members:{$all:[userId, secondId]}}) // check if chat is already exist or not
-
-        if(chat) return res.status(200).send({
-            result:chat
-        }) 
-        // if chat is exist, return it
-        const newChat=await Chats.create({ members:[userId, secondId]}) // if not exist create new one
-        const response=await newChat.save() // The save() method uses either the insert or the update command
-
-        res.status(200).json({
-            result:response,         
-        })
-
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(error)
-    }
-  },
-
+    createChat: async (req, res) => {
+        const userId = req.user.toString()
+        const { secondId } = req.params
+        try {
+            const user = await Users.findOne({ _id: secondId }) // await kullanarak kullanıcıyı bulun
+            const{name, image}=user
+            const chat = await Chats.findOne({ members: { $all: [userId, secondId] } })
+    
+            if (chat) {
+                return res.status(200).send({
+                    result: chat
+                }) 
+            }
+            const newChat = await Chats.create({ members: [userId, secondId], user: {name, image} }) // Yeni sohbeti oluşturun ve 'second' alanını 'user' olarak ayarlayın
+            const response = await newChat.save() 
+    
+            res.status(200).json({
+                result: response,         
+            })
+        } catch (error) {
+            console.log(error);
+            res.status(500).json(error)
+        }
+    },
+    
   findAllChats:async(req, res)=>{
     const userId=req.user.toString()
 
