@@ -7,6 +7,7 @@ Connectify
 require("express-async-errors");
 const Chats = require("../models/chats");
 const Users = require("../models/users");
+const Messages = require("../models/messages");
 
 module.exports = {
 
@@ -58,10 +59,12 @@ module.exports = {
     const {secondId}=req.params
     try {
         const chat=await Chats.findOne({members:{$in: [userId, secondId]}})
+        const lastMessage = await Messages.findOne({ chatId: chat._id }).sort({ createdAt: -1 });
+
         res.status(200).send({
             result:{
                 chat:chat,
-               
+                message:lastMessage
             }
         })
 
