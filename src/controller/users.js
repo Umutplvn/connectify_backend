@@ -114,8 +114,10 @@ module.exports = {
     const cleanedContacts = user.contacts.map(contact => ({
       _id: contact._id,
       name: contact.name,
+      email: contact.email,
       username: contact.username,
-      image: contact.image
+      image: contact.image,
+      bio:contact.bio,
     }));
 
     res.status(202).send({
