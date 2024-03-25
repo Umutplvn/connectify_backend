@@ -88,9 +88,16 @@ module.exports = {
     );
     const tokenData = await Token.findOne({ userId: userId });
 
-    const contacts = await User.find({ "contacts._id": userId });
+    const contacts = await User.find({ "contacts._id": { $eq: userId } });
     for (const contact of contacts) {
-      contact.contacts = updatedUser; 
+      const updatedContacts = contact.contacts.map(ct => {
+        if (ct._id.toString() === userId.toString()) {
+          return updatedUser;
+        } else {
+          return ct;
+        }
+      });
+      contact.contacts = updatedContacts;
       await contact.save();
     }
 
@@ -104,10 +111,16 @@ module.exports = {
   getMyContacts: async (req, res) => {
     const userId = req.user;
     const user = await User.findOne({ _id: userId });
+    const cleanedContacts = user.contacts.map(contact => ({
+      _id: contact._id,
+      name: contact.name,
+      username: contact.username,
+      image: contact.image
+    }));
 
     res.status(202).send({
       error: false,
-      contacts: user.contacts,
+      contacts: cleanedContacts,
     });
   },
 
