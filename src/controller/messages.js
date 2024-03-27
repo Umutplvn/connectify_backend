@@ -121,7 +121,7 @@ module.exports = {
   },
 
   deleteMessage: async (req, res) => {
-    const data = await Messages.deleteOne({ _id: req.body.messageId });
+    const data = await Messages.deleteOne({ _id: req.params.messageId });
 
     if (data.deletedCount >= 1) {
       res.send({
