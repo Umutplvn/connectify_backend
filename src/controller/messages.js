@@ -121,16 +121,16 @@ module.exports = {
   },
 
   deleteMessage: async (req, res) => {
-    const data = await Messages.deleteOne({ _id: req.params.messageId });
+    const data = await Messages.updateOne({ _id: req.params.messageId }, { sender:"",
+      text:"This message was deleted.",
+      reaction:"",
+      replyto:""
+    });
 
-    if (data.deletedCount >= 1) {
-      res.send({
-        message: "This message was deleted.",
-      });
-    } else {
-      res.send({
-        message: "There is no recording to be deleted.",
-      });
-    }
+      const message= await Messages.findOne({_id: req.params.messageId})
+
+      res.send(message);
+  
+
   },
 };
