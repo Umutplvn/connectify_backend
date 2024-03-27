@@ -52,6 +52,7 @@ const UserSchema= new mongoose.Schema({
     },
 
     contacts:[{type:Object}],
+    favMessages:[{type:Object}]
 
 
 },{timestamps:true, collection:"user"})
