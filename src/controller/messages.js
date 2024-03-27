@@ -55,25 +55,13 @@ module.exports = {
 
   favMessage: async (req, res) => {
      const {info} = req.body
-     const val=await Messages.findOne({_id:info?._id })
 
     try {
-      let value=val.fav
 
-      if(value){
-        await Messages.updateOne({_id:info?._id}, {fav:true},   {runValidators: true} )
-        await Users.updateOne({ _id: req.user }, { $push: { favMessages: {info} }});
-
+      await Users.updateOne({ _id: req.user }, { $push: { favMessages: {info} }});
       const user= await Users.findOne({_id: req.user }) 
       res.status(200).send(user.favMessages);
 
-      }else{
-        await Messages.updateOne({_id:info?._id}, {fav:false},   {runValidators: false} )
-        await Users.updateOne({ _id: req.user }, { $pull: { favMessages: {info} }});
-
-        const user= await Users.findOne({_id: req.user }) 
-        res.status(200).send(user.favMessages);
-      }
 
     } catch (error) {
       console.log(error);

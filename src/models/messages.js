@@ -11,10 +11,6 @@ const MessageSchema= new mongoose.Schema({
     chatId:String,
     sender:Object,
     text:String,
-    fav:{
-        type:Boolean,
-        default:false
-    },
     reaction:String,
     replyto:Object
 
