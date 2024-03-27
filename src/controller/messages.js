@@ -121,6 +121,11 @@ module.exports = {
   },
 
   deleteMessage: async (req, res) => {
+    const userId=req.user
+    const user = await Users.findOne({_id:userId})
+    user.favMessages = user.favMessages.filter(item => item.info._id !== req.params.messageId);
+    await user.save();
+
     const data = await Messages.updateOne({ _id: req.params.messageId }, { sender:"",
       text:"This message was deleted.",
       reaction:"",
