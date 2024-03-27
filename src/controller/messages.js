@@ -12,30 +12,38 @@ const Chats = require("../models/chats");
 module.exports = {
   createMessage: async (req, res) => {
     const { chatId, text, messageId } = req.body;
-    const senderId=req.user
-    
-    const sender = await Users.findOne({_id:senderId})
-    const{_id, email, username, name}=sender
-    const replyto= await Messages.findOne({_id:messageId})
-    const message = await Messages.create({ chatId, sender:{_id, email, username, name}, text, replyto });
-    await Chats.updateOne({_id:chatId}, {show:true}, {runValidators: true})
+    const senderId = req.user;
+
+    const sender = await Users.findOne({ _id: senderId });
+    const { _id, email, username, name } = sender;
+    const replyto = await Messages.findOne({ _id: messageId });
+    const message = await Messages.create({
+      chatId,
+      sender: { _id, email, username, name },
+      text,
+      replyto,
+    });
+    await Chats.updateOne(
+      { _id: chatId },
+      { show: true },
+      { runValidators: true }
+    );
 
     try {
-      if(messageId){
+      if (messageId) {
         const response = await message.save();
         res.status(200).send({
           error: false,
           response,
-          replyto
+          replyto,
         });
-      }else{
+      } else {
         const response = await message.save();
         res.status(200).send({
           error: false,
           response,
-        })
+        });
       }
-    
     } catch (error) {
       console.log(error);
       res.status(500).send(error);
@@ -45,7 +53,7 @@ module.exports = {
   getMessages: async (req, res) => {
     const { chatId } = req.params;
     try {
-      const messages = await Messages.find({ chatId:chatId });
+      const messages = await Messages.find({ chatId: chatId });
       res.status(200).send(messages);
     } catch (error) {
       console.log(error);
@@ -54,15 +62,23 @@ module.exports = {
   },
 
   favMessage: async (req, res) => {
-     const {info} = req.body
+    const { info } = req.body;
 
     try {
-
-      await Users.updateOne({ _id: req.user }, { $push: { favMessages: {info} }});
-      const user= await Users.findOne({_id: req.user }) 
-      res.status(200).send(user.favMessages);
-
-
+      const user = await Users.findOne({ _id: req.user });
+      const check = user.favMessages.filter(
+        (item) => item?.info?._id == info?._id
+      );
+      if (check.length > 0) {
+        res.status(200).send("Message has already been added to favorites.");
+      } else {
+        await Users.updateOne(
+          { _id: req.user },
+          { $push: { favMessages: { info } } }
+        );
+        const data = await Users.findOne({ _id: req.user });
+        res.status(200).send(data.favMessages);
+      }
     } catch (error) {
       console.log(error);
       res.status(500).send(error);
@@ -70,18 +86,21 @@ module.exports = {
   },
 
   addReaction: async (req, res) => {
-     const {messageId} = req.body
-     const {reaction}=req.body
-     const val=await Messages.findOne({_id:messageId })
+    const { messageId } = req.body;
+    const { reaction } = req.body;
+    const val = await Messages.findOne({ _id: messageId });
 
     try {
+      await Messages.updateOne(
+        { _id: messageId },
+        { reaction: reaction },
+        {
+          runValidators: true,
+        }
+      );
 
-      await Messages.updateOne({ _id:messageId },  {reaction:reaction}, {
-      runValidators: true});
-
-      const upMessage = await Messages.findOne({_id:messageId})
+      const upMessage = await Messages.findOne({ _id: messageId });
       res.status(200).send(upMessage);
-
     } catch (error) {
       console.log(error);
       res.status(500).send(error);
@@ -101,6 +120,4 @@ module.exports = {
       });
     }
   },
-
-
 };
