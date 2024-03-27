@@ -56,8 +56,8 @@ module.exports = {
   },
 
   read: async (req, res) => {
-    const userId=req.body
-    const data = await User.findOne({ _id:userId });
+    
+    const data = await User.findOne({ _id: req.params.userId });
 
     res.status(200).send({
       error: false,
