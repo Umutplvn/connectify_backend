@@ -70,14 +70,27 @@ module.exports = {
         (item) => item?.info?._id == info?._id
       );
       if (check.length > 0) {
-        res.status(200).send("Message has already been added to favorites.");
+
+        await Users.updateOne(
+          { _id: req.user },
+          { $pull: { favMessages: { info } } }
+        );
+        const data = await Users.findOne({ _id: req.user });
+        res.status(200).send({
+          response:data.favMessages,
+          message:"The message has been removed from favorites."
+        });
+
       } else {
         await Users.updateOne(
           { _id: req.user },
           { $push: { favMessages: { info } } }
         );
         const data = await Users.findOne({ _id: req.user });
-        res.status(200).send(data.favMessages);
+        res.status(200).send({
+          response:data.favMessages,
+          message:"The message has been added to favorites."
+        });
       }
     } catch (error) {
       console.log(error);
