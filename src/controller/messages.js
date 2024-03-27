@@ -125,7 +125,7 @@ module.exports = {
 
     if (data.deletedCount >= 1) {
       res.send({
-        message: "Message successfully deleted",
+        message: "This message was deleted.",
       });
     } else {
       res.send({
