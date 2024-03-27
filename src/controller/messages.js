@@ -60,7 +60,7 @@ module.exports = {
     try {
       let value=val.fav
 
-      if(!value){
+      if(value){
         await Users.updateOne({ _id: req.user }, { $push: { favMessages: {info} }});
         await Messages.updateOne({_id:info?._id}, {fav:true},   {runValidators: true} )
 
@@ -74,12 +74,6 @@ module.exports = {
         const user= await Users.findOne({_id: req.user }) 
         res.status(200).send(user.favMessages);
       }
-
-      // const messages = await Messages.updateOne({ _id:messageId },  {fav:(!value)}, {
-      // runValidators: true});
-
-      // const upMessage = await Messages.findOne({_id:messageId})
-      // res.status(200).send(upMessage);
 
     } catch (error) {
       console.log(error);
