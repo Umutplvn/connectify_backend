@@ -34,8 +34,7 @@ module.exports = {
         const response = await message.save();
         res.status(200).send({
           error: false,
-          response,
-          replyto,
+          response
         });
       } else {
         const response = await message.save();
@@ -126,7 +125,7 @@ module.exports = {
     user.favMessages = user.favMessages.filter(item => item.info._id !== req.params.messageId);
     await user.save();
 
-    const data = await Messages.updateOne({ _id: req.params.messageId }, { sender:"",
+    const data = await Messages.updateOne({ _id: req.params.messageId }, { sender:{_id:req.user},
       text:"This message was deleted.",
       reaction:"",
       replyto:""
